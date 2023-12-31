@@ -1,6 +1,7 @@
 'use client';
 
 import useFlashcardsApi from '@/app/api/use-flashcards-api';
+import Container from '@/components/container';
 import FlashcardSetViewerForm from '@/components/flashcards/flashcard-set-viewer-form';
 import IconButton from '@/components/icon-button';
 import { Input } from '@/components/ui/input';
@@ -8,10 +9,9 @@ import { FlashcardSetType } from '@/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 
 const FlashcardPage = ({ params }: { params: { flashcardId: string } }) => {
-    const router = useRouter();
     const queryClient = useQueryClient();
     const [inputValue, setInputValue] = useState(1);
 
@@ -59,29 +59,31 @@ const FlashcardPage = ({ params }: { params: { flashcardId: string } }) => {
     if (!data) return null;
 
     return (
-        <div className='h-full w-full'>
-            <FlashcardSetViewerForm initialData={data} />
+        <Container>
+            <div className='h-full w-full mx-auto'>
+                <FlashcardSetViewerForm initialData={data} />
 
-            <div className='mt-6 w-full bg-white rounded-xl h-[90px] p-5 flex items-center justify-center'>
-                <div className='flex items-center justify-center gap-x-7'>
-                    <IconButton
-                        className='border-none hover:bg-transparent w-fit'
-                        size={24}
-                        disabled={inputValue === 0}
-                        icon={Plus}
-                        onClick={() => mutate()}
-                    />
-                    <p className='text-xl font-medium'>Add card(s)</p>
-                    <Input
-                        type='text'
-                        value={inputValue}
-                        maxLength={3}
-                        onChange={handleChange}
-                        className='text-black rounded-full w-fit h-[40px] max-w-[80px] text-base font-medium'
-                    />
+                <div className='mt-6 w-full bg-white rounded-xl h-[90px] p-5 flex items-center justify-center'>
+                    <div className='flex items-center justify-center gap-x-7'>
+                        <IconButton
+                            className='border-none hover:bg-transparent w-fit'
+                            size={24}
+                            disabled={inputValue === 0}
+                            icon={Plus}
+                            onClick={() => mutate()}
+                        />
+                        <p className='text-xl font-medium'>Add card(s)</p>
+                        <Input
+                            type='text'
+                            value={inputValue}
+                            maxLength={3}
+                            onChange={handleChange}
+                            className='text-black rounded-full w-fit h-[40px] max-w-[80px] text-base font-medium'
+                        />
+                    </div>
                 </div>
             </div>
-        </div>
+        </Container>
     );
 };
 

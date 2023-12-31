@@ -4,6 +4,8 @@ import './globals.css';
 import TanstackProvider from '@/components/providers/tanstack-provider';
 import { Toaster } from 'react-hot-toast';
 import ModalProvider from '@/components/providers/modal-provider';
+import OauthProvider from '@/components/providers/oauth-provider';
+import AuthProvider from '@/components/providers/auth-provider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,9 +23,13 @@ export default function RootLayout({
         <html lang='en'>
             <body className={inter.className}>
                 <TanstackProvider>
-                    <ModalProvider />
-                    <Toaster position='top-right' />
-                    {children}
+                    <AuthProvider>
+                        <OauthProvider>
+                            <ModalProvider />
+                            <Toaster position='top-right' />
+                            {children}
+                        </OauthProvider>
+                    </AuthProvider>
                 </TanstackProvider>
             </body>
         </html>

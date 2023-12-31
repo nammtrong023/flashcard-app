@@ -10,6 +10,7 @@ const useFlashcardStore = create<FlashcardStore>((set) => ({
     flashcard: {
         id: 0,
         term: '',
+        flashcard_set: 0,
         definition: '',
         created_at: new Date(),
         updated_at: new Date(),

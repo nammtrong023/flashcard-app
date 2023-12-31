@@ -1,12 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import toast from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import useFlashcardsApi from '@/app/api/use-flashcards-api';
-import { MoreVertical, Pen, PenLine, Trash } from 'lucide-react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { MoreVertical, Pen, Trash } from 'lucide-react';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -18,20 +14,13 @@ const stopPropagation = (e: React.MouseEvent) => {
     e.stopPropagation();
 };
 
-const DropDownFcardOptions = ({ fcardSetId }: { fcardSetId: number }) => {
-    const router = useRouter();
-    const queryClient = useQueryClient();
-    const [isOpen, setIsOpen] = React.useState(false);
+interface DropDownFcardOptions {
+    onEdit: () => void;
+    onDelete: () => void;
+}
 
-    const { deleteFlashcardSet } = useFlashcardsApi();
-    const { mutate } = useMutation({
-        mutationFn: () => deleteFlashcardSet(fcardSetId),
-        onSuccess: () => {
-            router.refresh();
-            queryClient.invalidateQueries({ queryKey: ['get-flashcard-sets'] });
-            toast.success('Flashcard set deleted');
-        },
-    });
+const DropDownFcardOptions = ({ onEdit, onDelete }: DropDownFcardOptions) => {
+    const [isOpen, setIsOpen] = React.useState(false);
 
     return (
         <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
@@ -49,14 +38,10 @@ const DropDownFcardOptions = ({ fcardSetId }: { fcardSetId: number }) => {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className='w-56 rounded-xl' align='start'>
-                <DropdownMenuItem className='w-full flex items-center gap-x-2'>
-                    <PenLine size={18} />
-                    Rename
-                </DropdownMenuItem>
                 <DropdownMenuItem
                     onClick={(e) => {
                         stopPropagation(e);
-                        router.push(`/flashcards/${fcardSetId}/edit`);
+                        onEdit();
                     }}
                     className='w-full flex items-center gap-x-2'
                 >
@@ -67,7 +52,7 @@ const DropDownFcardOptions = ({ fcardSetId }: { fcardSetId: number }) => {
                     className='w-full flex items-center gap-x-2'
                     onClick={(e) => {
                         stopPropagation(e);
-                        mutate();
+                        onDelete();
                     }}
                 >
                     <Trash size={16} />

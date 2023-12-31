@@ -13,14 +13,19 @@ import { useRouter } from 'next/navigation';
 import useFlashcardsApi from '@/app/api/use-flashcards-api';
 import { useMutation } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
+import useClassesApi from '@/app/api/use-group-api';
+import { useAuth } from '../providers/auth-provider';
+import { useModalStore } from '@/hooks/use-modal-store';
 
 export function DropdownMenuCreate() {
     const router = useRouter();
+    const { userId } = useAuth();
+    const { onOpen } = useModalStore();
+
     const { createFlashcardSet } = useFlashcardsApi();
 
     const { mutate, data, isSuccess } = useMutation({
-        mutationKey: ['create-flashcard-set'],
-        mutationFn: createFlashcardSet,
+        mutationFn: () => createFlashcardSet(userId),
         onError: (error) => {
             console.log(error);
             toast.error('Something went wrong');
@@ -29,7 +34,7 @@ export function DropdownMenuCreate() {
 
     React.useEffect(() => {
         if (data && isSuccess) {
-            router.push(`flashcards/${data.id}`);
+            return router.push(`flashcards/${data.id}`);
         }
     }, [data, isSuccess, router]);
 
@@ -48,7 +53,10 @@ export function DropdownMenuCreate() {
             </DropdownMenuTrigger>
             <DropdownMenuContent className='w-56' align='start'>
                 <DropdownMenuItem onClick={() => mutate()}>
-                    Create Flashcards
+                    Study set
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onOpen('createClass')}>
+                    Class
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

@@ -104,3 +104,9 @@ html {
 .swiper-button-lock {
     display: inline-block !important;
 }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

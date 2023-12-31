@@ -13,6 +13,7 @@ import QuestionOptions from './_components/question-options';
 import QuestionOptionsModal from '@/components/modals/question-options-modal';
 import { shuffleArray } from '@/lib/utils';
 import { X } from 'lucide-react';
+import Logo from '@/components/logo';
 
 type TemplateType = React.ElementType<{
     flashcard: FlashcardType;
@@ -97,13 +98,23 @@ const LearnPage = ({ params }: { params: { flashcardId: string } }) => {
         const flashcard = filteredData[currentFcardIndex];
 
         if (!flashcard) {
-            return <div>Quiz completed!</div>;
+            return (
+                <div className='flex flex-col items-center gap-y-4'>
+                    <div>Quiz completed!</div>
+                    <Button
+                        variant='green'
+                        onClick={() => router.push(`/flashcards/${data.id}`)}
+                    >
+                        Go back
+                    </Button>
+                </div>
+            );
         }
 
         return (
             <>
                 <div className='bg-white w-full fixed z-40 top-0 min-h-[60px] flex items-center justify-between py-1 px-5'>
-                    <div>Logo</div>
+                    <Logo />
                     <p className='font-semibold text-xl'>{data.title}</p>
                     <div className='flex items-center justify-center gap-x-3'>
                         <QuestionOptionsModal

@@ -37,7 +37,7 @@ const FlippyFCardList = ({ flashcards }: { flashcards: FlashcardType[] }) => {
                 </SwiperSlide>
             ))}
 
-            <div className='flex items-center justify-between gap-x-2 absolute bottom-0 bg-white max-h-[50px] w-fit h-full rounded-full p-2 z-40 left-1/2'>
+            <div className='flex items-center justify-between gap-x-2 absolute bottom-0 bg-white max-h-[50px] w-fit h-full rounded-full p-2 z-30 left-1/2'>
                 <button
                     className={`prev ${CLASS_NAME_BUTTON}`}
                     disabled={index === 1}
@@ -50,7 +50,7 @@ const FlippyFCardList = ({ flashcards }: { flashcards: FlashcardType[] }) => {
                 </div>
                 <button
                     disabled={index === totalFcards}
-                    className={`next !overflow-visible ${CLASS_NAME_BUTTON}`}
+                    className={`next ${CLASS_NAME_BUTTON}`}
                     onClick={() => setIndex((prev) => prev + 1)}
                 >
                     <ChevronRight size={16} />

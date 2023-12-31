@@ -9,35 +9,47 @@ interface IconButtonProps {
     className?: string;
     size?: number;
     disabled?: boolean;
+    variantType?: VariantType;
+
     onClick?: () => void;
 }
+
+type VariantType =
+    | 'default'
+    | 'destructive'
+    | 'outline'
+    | 'secondary'
+    | 'ghost'
+    | 'link'
+    | 'green'
+    | null
+    | undefined;
 
 const IconButton = ({
     title,
     icon: Icon,
     disabled = false,
+    variantType = 'outline',
     size = 16,
     className,
     onClick,
 }: IconButtonProps) => {
     return (
-        <div>
-            <Button
-                type='button'
-                variant='outline'
-                onClick={onClick}
-                disabled={disabled}
-                className={cn(
-                    'flex items-center justify-center gap-x-1',
-                    className,
-                )}
-            >
-                <span className='flex items-center justify-center w-fit rounded-full bg-greenPrimary hover:bg-greenPrimary/80 transition-colors p-2'>
-                    <Icon size={size} className='text-white' />
-                </span>
-                {title ? <p>{title}</p> : null}
-            </Button>
-        </div>
+        <Button
+            type='button'
+            variant={variantType}
+            onClick={onClick}
+            disabled={disabled}
+            className={cn(
+                'flex items-center justify-center gap-x-1',
+                className,
+            )}
+        >
+            <span className='flex items-center justify-center w-fit rounded-full bg-greenPrimary hover:bg-greenPrimary/80 transition-colors p-2'>
+                <Icon size={size} className='text-white' />
+            </span>
+            {title ? <p>{title}</p> : null}
+        </Button>
     );
 };
 

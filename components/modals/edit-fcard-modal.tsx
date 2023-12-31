@@ -9,9 +9,10 @@ import { useModalStore } from '@/hooks/use-modal-store';
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useFlashcardStore } from '@/hooks/use-flashcard-store';
+import useFlashcardsApi from '@/app/api/use-flashcards-api';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const flashcardSchema = z.object({
-    id: z.coerce.number().optional(),
     term: z.string().nullable().optional(),
     definition: z.string().nullable().optional(),
 });
@@ -22,7 +23,10 @@ export function EditFCardModal() {
     const [isScrollTerm, setIsScrollTerm] = useState(false);
     const [isScrollDefinition, setIsScrollDefinition] = useState(false);
 
+    const queryClient = useQueryClient();
+
     const { flashcard } = useFlashcardStore();
+    const { updateFlashcard } = useFlashcardsApi();
 
     const { isOpenModal, type, onClose } = useModalStore();
     const isOpen = isOpenModal && type === 'editCard';
@@ -30,20 +34,32 @@ export function EditFCardModal() {
     const form = useForm<FlashcardFormType>({
         resolver: zodResolver(flashcardSchema),
         defaultValues: {
-            id: flashcard.id,
             term: flashcard.term,
             definition: flashcard.definition,
         },
     });
 
+    const { mutate } = useMutation({
+        mutationFn: (data: any) => updateFlashcard(flashcard.id, data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['get-flashcard-set'] });
+            onClose();
+        },
+    });
+
     useEffect(() => {
-        if (flashcard) {
-            form.setValue('term', flashcard.term);
-            form.setValue('definition', flashcard.definition);
-        }
+        form.setValue('term', flashcard.term);
+        form.setValue('definition', flashcard.definition);
     }, [flashcard, form]);
 
-    const onSubmit = () => {};
+    const onSubmit = (values: any) => {
+        const data = {
+            flashcard_set: flashcard.flashcard_set,
+            quantity: 1,
+            ...values,
+        };
+        mutate(data);
+    };
 
     const handleTextAreaInput = (
         event: React.ChangeEvent<HTMLTextAreaElement>,
@@ -59,10 +75,10 @@ export function EditFCardModal() {
         }
     };
 
-    if (!flashcard) return null;
+    const disabled =
+        form.getValues('term') === '' || form.getValues('definition') === '';
 
-    const isDisabled =
-        form.getValues('term') === '' && form.getValues('definition') === '';
+    if (!flashcard) return null;
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
@@ -121,7 +137,7 @@ export function EditFCardModal() {
                                 </FormItem>
                             )}
                         />
-                        <Button type='submit' disabled={isDisabled}>
+                        <Button type='submit' disabled={disabled}>
                             Save changes
                         </Button>
                     </form>

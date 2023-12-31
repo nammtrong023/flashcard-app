@@ -1,27 +1,35 @@
 'use client';
 
+import useAxiosPrivate from '@/hooks/use-axios-private';
+import { FlashcardSetType, FlashcardType } from '@/types';
 import { updateFlashcardSetType } from '@/components/flashcards/flashcard-set-viewer-form';
-import { FlashcardSetType, FlashcardSetViewer, FlashcardType } from '@/types';
-import axios from 'axios';
 
 const baseUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/flashcards`;
 
 const useFlashcardsApi = () => {
-    const getFlashcardSets = async () => {
-        const response = await axios.get(`${baseUrl}/flashcard-sets`);
+    const axiosPrivate = useAxiosPrivate();
+
+    const getFlashcardSets = async (ownerId: string) => {
+        const response = await axiosPrivate.get(
+            `${baseUrl}/flashcard-sets-by-owner/${ownerId}`,
+        );
 
         return response.data as FlashcardSetType[];
     };
 
     const getFlashcardSet = async (id: number) => {
-        const response = await axios.get(`${baseUrl}/flashcard-sets/${id}`);
+        const response = await axiosPrivate.get(
+            `${baseUrl}/flashcard-sets/${id}`,
+        );
 
         return response.data as FlashcardSetType;
     };
 
-    const createFlashcardSet = async () => {
-        const response = await axios.post(`${baseUrl}/flashcard-sets`);
-
+    const createFlashcardSet = async (ownerId: string) => {
+        const response = await axiosPrivate.post(
+            `${baseUrl}/flashcard-sets-by-owner/${ownerId}`,
+            { owner: ownerId },
+        );
         return response.data as FlashcardSetType;
     };
 
@@ -29,7 +37,7 @@ const useFlashcardsApi = () => {
         flashcardSetId: number,
         data: updateFlashcardSetType,
     ) => {
-        const response = await axios.put(
+        const response = await axiosPrivate.put(
             `${baseUrl}/flashcard-sets/${flashcardSetId}`,
             data,
         );
@@ -38,11 +46,22 @@ const useFlashcardsApi = () => {
     };
 
     const deleteFlashcardSet = async (flashcardSetId: number) => {
-        await axios.delete(`${baseUrl}/flashcard-sets/${flashcardSetId}`);
+        await axiosPrivate.delete(
+            `${baseUrl}/flashcard-sets/${flashcardSetId}`,
+        );
+    };
+
+    const updateFlashcard = async (flashcardId: number, data: any) => {
+        const response = await axiosPrivate.put(
+            `${baseUrl}/${flashcardId}`,
+            data,
+        );
+
+        return response.data as FlashcardSetType;
     };
 
     const createFlashcard = async (id: number, quantity: number) => {
-        const response = await axios.post(`${baseUrl}/`, {
+        const response = await axiosPrivate.post(`${baseUrl}/`, {
             flashcard_set: id,
             quantity,
         });
@@ -51,7 +70,7 @@ const useFlashcardsApi = () => {
     };
 
     const delFlashcard = async (flashcardId: number | undefined) => {
-        await axios.delete(`${baseUrl}/${flashcardId}`);
+        await axiosPrivate.delete(`${baseUrl}/${flashcardId}`);
     };
 
     return {
@@ -61,6 +80,7 @@ const useFlashcardsApi = () => {
         getFlashcardSet,
         deleteFlashcardSet,
 
+        updateFlashcard,
         createFlashcard,
         delFlashcard,
     };

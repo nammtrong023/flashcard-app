@@ -22,9 +22,9 @@ const MultipleChoiceTemplate = ({
     const colors = ['#dbeeff', '#fdf0e3', '#e6dff2', '#ebf2df'];
 
     useEffect(() => {
-        setIsMounted(true); // Set mounted to true when the component mounts
+        setIsMounted(true);
         return () => {
-            setIsMounted(false); // Set mounted to false when the component unmounts
+            setIsMounted(false);
         };
     }, []);
 
@@ -82,9 +82,9 @@ const MultipleChoiceTemplate = ({
                 <div className='grid grid-cols-2 gap-3'>
                     <AnswerOption
                         isSelected={isSelected}
-                        definition={flashcard.definition}
+                        term={flashcard.term}
                         onClick={() =>
-                            handleAnswer(flashcard.id, flashcard.definition)
+                            handleAnswer(flashcard.id, flashcard.term)
                         }
                         className={cn(
                             isSelected &&
@@ -99,17 +99,14 @@ const MultipleChoiceTemplate = ({
                         <AnswerOption
                             key={otherFcard.id}
                             isSelected={isSelected}
-                            definition={otherFcard.definition}
+                            term={otherFcard.term}
                             className={cn(
                                 isSelected &&
                                     wrongAnswer(otherFcard.id) &&
                                     'bg-red/10 border-red',
                             )}
                             onClick={() =>
-                                handleAnswer(
-                                    otherFcard.id,
-                                    otherFcard.definition,
-                                )
+                                handleAnswer(otherFcard.id, otherFcard.term)
                             }
                             backgroundColor={
                                 wrongAnswer(otherFcard.id)
@@ -131,14 +128,14 @@ const MultipleChoiceTemplate = ({
 };
 
 const AnswerOption = ({
-    definition,
+    term,
     isSelected,
     backgroundColor,
     children,
     className,
     onClick,
 }: {
-    definition: string;
+    term: string;
     isSelected: boolean | null;
     backgroundColor: string;
     children: React.ReactNode;
@@ -161,7 +158,7 @@ const AnswerOption = ({
         >
             {children}
         </div>
-        {definition}
+        {term}
     </div>
 );
 

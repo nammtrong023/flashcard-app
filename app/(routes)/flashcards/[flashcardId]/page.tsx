@@ -1,6 +1,7 @@
 'use client';
 
 import useFlashcardsApi from '@/app/api/use-flashcards-api';
+import Container from '@/components/container';
 import FlashcardItem from '@/components/flashcards/flashcard-item';
 import FlippyFCardList from '@/components/flippy-card/flippy-fcard-list';
 import IconButton from '@/components/icon-button';
@@ -20,48 +21,48 @@ const FlashcardPage = ({ params }: { params: { flashcardId: string } }) => {
         queryFn: () => getFlashcardSet(fcardId),
     });
 
-    if (isFetching) {
-        return <div>Loading...</div>;
-    }
+    if (isFetching) return null;
 
     if (!data?.flashcard_set_viewer) {
         return redirect(`/flashcards/${params.flashcardId}/edit`);
     }
 
     return (
-        <div className='space-y-5'>
-            <IconButton
-                title='Go back'
-                icon={ArrowLeft}
-                onClick={() => router.back()}
-            />
-            <h2 className='font-medium text-3xl'>{data.title}</h2>
-            <div className='flex justify-between gap-x-3 w-full min-h-[600px] h-full'>
-                <div className='w-full h-full relative'>
-                    <FlippyFCardList flashcards={data.flashcards} />
-                    <Button
-                        variant='outline'
-                        onClick={() => router.push(`${fcardId}/learn`)}
-                        className='absolute top-5 right-5 z-40'
-                    >
-                        Learn
-                    </Button>
+        <Container>
+            <div className='space-y-5 mx-auto'>
+                <IconButton
+                    title='Go back'
+                    icon={ArrowLeft}
+                    onClick={() => router.push('/')}
+                />
+                <h2 className='font-medium text-3xl'>{data.title}</h2>
+                <div className='flex justify-between gap-x-3 w-full min-h-[600px] h-full'>
+                    <div className='w-full h-full relative'>
+                        <FlippyFCardList flashcards={data.flashcards} />
+                        <Button
+                            variant='outline'
+                            onClick={() => router.push(`${fcardId}/learn`)}
+                            className='absolute top-5 right-5 z-40'
+                        >
+                            Learn
+                        </Button>
+                    </div>
+                </div>
+                <div className='h-full'>
+                    <span className='font-medium text-3xl'>
+                        {data.flashcards.length} Terms
+                    </span>
+                    <div className='space-y-10 h-full'>
+                        {data.flashcards.map((flashcard) => (
+                            <FlashcardItem
+                                key={flashcard.id}
+                                flashcard={flashcard}
+                            />
+                        ))}
+                    </div>
                 </div>
             </div>
-            <div className='h-full'>
-                <span className='font-medium text-3xl'>
-                    {data.flashcards.length} Terms
-                </span>
-                <div className='space-y-10 h-full'>
-                    {data.flashcards.map((flashcard) => (
-                        <FlashcardItem
-                            key={flashcard.id}
-                            flashcard={flashcard}
-                        />
-                    ))}
-                </div>
-            </div>
-        </div>
+        </Container>
     );
 };
 
