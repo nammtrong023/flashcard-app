@@ -10,8 +10,8 @@ import AuthProvider from '@/components/providers/auth-provider';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-    title: 'Flashcard',
-    description: 'Flashcard app',
+    title: 'Mindnex',
+    description: 'Quiz app',
 };
 
 export default function RootLayout({

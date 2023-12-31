@@ -12,6 +12,8 @@ interface InviteCodePageProps {
     };
 }
 
+const inviteLink = process.env.NEXT_PUBLIC_FE_URL;
+
 const InviteCodePage = ({ params }: InviteCodePageProps) => {
     const router = useRouter();
     const { userId } = useAuth();
@@ -28,7 +30,7 @@ const InviteCodePage = ({ params }: InviteCodePageProps) => {
 
     useEffect(() => {
         if (status === 'success' && data !== undefined) {
-            router.push(`http://localhost:3000/classes/${data.id}`);
+            router.push(`${inviteLink}/classes/${data.id}`);
         }
     }, [data, router, status]);
 
