@@ -2,7 +2,7 @@
 
 ## Backend Source
 
-The backend source code for this project, you can found in the [backend repository](https://github.com/nammtrong023/quiz-backend).
+The backend source code for this project, you can found in the [backend repository](https://github.com/nammtrong023/flashcard-backend).
 
 ### Features
 
